@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Symfony\Component\Console\Input\Input;
 
@@ -40,6 +41,7 @@ class AdminProductController extends Controller
 
          // Verifica o arquivo e pega o diretorio real onde estará armazenado
         if( !empty($input["cover"]) && $input["cover"]->isValid() ){
+            Storage::delete($product->cover ?? '');
             $file = $input["cover"];
             $path = $file->store("products");
             $input["cover"] = $path;
@@ -83,4 +85,24 @@ class AdminProductController extends Controller
         return Redirect::route("admin.product");
         
     }
+
+    public function destroy(Product $product){
+
+        $product->delete();
+        Storage::delete($product->cover ?? '');
+        return Redirect::route("admin.product");
+    }
+
+    public function destroyImage(Product $product){
+
+        Storage::delete($product->cover ?? '');
+        $product->cover = null;
+        $product->save();
+
+        return Redirect::back();
+
+
+
+    }
+
 }

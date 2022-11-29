@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\ProductStoreRequest;
 use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
@@ -29,15 +30,9 @@ class AdminProductController extends Controller
     }
 
     // Recebe requisição para dar update
-    public function update(Product $product, Request $request){
+    public function update(ProductStoreRequest $product, Request $request){
 
-        $input = $request->validate([
-            "name" => "string|required",
-            "price" => "string|required",
-            "stock" => "integer|nullable",
-            "cover" => "file|nullable",
-            "description" => "string|nullable"
-        ]);
+        $input = $request->validated();
 
          // Verifica o arquivo e pega o diretorio real onde estará armazenado
         if( !empty($input["cover"]) && $input["cover"]->isValid() ){
@@ -61,16 +56,9 @@ class AdminProductController extends Controller
     }
 
     // Recebe a requisição de criar
-    public function store(Request $request){
+    public function store(ProductStoreRequest $request){
 
-        $input = $request->validate([
-            "name" => "string|required",
-            "price" => "string|required",
-            "stock" => "integer|nullable",
-            "cover" => "file|nullable",
-            "description" => "string|nullable"
-        ]);
-
+        $input = $request->validated();
         $input["slug"] = Str::slug($input["name"]);
 
         // Verifica o arquivo e pega o diretorio real onde estará armazenado

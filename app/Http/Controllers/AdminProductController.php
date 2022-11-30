@@ -30,7 +30,7 @@ class AdminProductController extends Controller
     }
 
     // Recebe requisição para dar update
-    public function update(ProductStoreRequest $product, Request $request){
+    public function update(ProductStoreRequest $request, Product $product){
 
         $input = $request->validated();
 
